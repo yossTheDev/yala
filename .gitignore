@@ -1,7 +1,8 @@
 __pycache__
 build
 dist
-app.build
-app.dist
-app.onefile-build
-yala
+main.build
+main.dist
+main.onefile-build
+/main.bin
+/yala

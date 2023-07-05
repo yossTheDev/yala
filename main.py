@@ -14,10 +14,8 @@ from rich.text import Text
 from rich.panel import Panel
 
 from callbacks import (
-    cb_dl,
-    cb_progress,
-    log_callback,
-    new_dl_cb,
+    log_cb,
+    dl_cb,
 )
 
 
@@ -32,7 +30,7 @@ pacman = pycman.config.init_with_config("/etc/pacman.conf")  # type: ignore
 @app.callback()
 def main(verbose: bool = False):
     if verbose == True:
-        pacman.logcb = log_callback
+        pacman.logcb = log_cb
 
 
 @app.command(name="list")
@@ -58,7 +56,7 @@ def update(verbose: bool = False):
 
     # Is Verbose Enabled Show Log to the Console
     if verbose == True:
-        pacman.logcb = log_callback
+        pacman.logcb = log_cb
     else:
         pacman.logcb = None
 
@@ -101,7 +99,7 @@ def upgrade(downgrade: bool = False, verbose: bool = False):
     Execute System Upgrade
     """
     if verbose == True:
-        pacman.logcb = log_callback
+        pacman.logcb = log_cb
     else:
         pacman.logcb = None
 
@@ -160,20 +158,15 @@ def upgrade(downgrade: bool = False, verbose: bool = False):
 
 @app.command()
 def install(pkg: List[str], verbose: bool = False):
-    global _last_filename
     """
     Install new packages in the System
     """
     # Initialize Pacman
-    # pacman.dlcb = download_callback
-    # pacman.progresscb = progress_callback
-    # pacman.eventcb = cb_event
-    pacman.dlcb = new_dl_cb
-    # pacman.progresscb = cb_progress
+    pacman.dlcb = dl_cb
 
     # Configure verbosity of this command
     if verbose == True:
-        pacman.logcb = log_callback
+        pacman.logcb = log_cb
     else:
         pacman.logcb = None
 
@@ -244,6 +237,71 @@ def install(pkg: List[str], verbose: bool = False):
 
 
 @app.command()
+def remove(pkg: List[str], verbose: bool = False):
+    """
+    Remove packages from your System
+    """
+    # Initialize Pacman
+    pacman.dlcb = dl_cb
+
+    # Configure verbosity of this command
+    if verbose == True:
+        pacman.logcb = log_cb
+    else:
+        pacman.logcb = None
+
+    # Get Local DB
+    # dbs = pacman.get_syncdbs()
+    db = pacman.get_localdb()
+    # Initialize New Transaction
+    try:
+        t: pyalpm.Transaction = pacman.init_transaction()
+
+        # Search for Packages To Install
+        packages_to_remove = list(set(pkg))
+        pkgs = []
+
+        for package in packages_to_remove:
+            pk = db.get_pkg(package)
+
+            if pk:
+                # Add package to the Transaction
+                t.remove_pkg(pk)
+                pkgs.append(pk)
+            else:
+                print(f"[bold red]ERROR[/bold red] Package {package} not found")
+
+        # Install valid packages
+        if len(pkgs) != 0:
+            # Show to the user the packages to be removed
+            names = ", ".join([f"[blue]{pkg.name}[/blue]" for pkg in pkgs])
+            print(f" Do you want to remove ({str(len(pkgs))}) packages: {names}?")
+
+            if prompt.Confirm.ask("  [white bold]Continue?[/white bold]"):
+                # Resolve Dependencies
+                result = t.prepare()
+
+                # if not result:
+                # print("[bold red]ERROR Resolving dependencies [/bold red]")
+
+                # Commit Transaction
+                try:
+                    t.commit()
+                    print(
+                        f" Package/s ({names}) are suceffuly removed from your system"
+                    )
+                # print(f" [bold red]ERROR[/bold red] No internet connection")
+
+                except Exception as error:
+                    print(f" [bold red]ERROR[/bold red] Resolving Packages")
+
+        # Realease Transaction
+        t.release()
+    except pyalpm.error as error:
+        print(f" [bold red]ERROR[/bold red] {error.args[0]}")
+
+
+@app.command()
 def search(query: str, local: bool = False, exact: bool = False):
     """
     Search for packages in local and sync dbs
@@ -295,7 +353,7 @@ def show_upgradable_packages():
         console.print("[bold white]Nothing to do here[/bold white]", justify="center")
     else:
         console.print(
-            f"[bold white]Total Upgradable Packages: [/bold white] [green] {upgradable} [/green]",
+            f"[bold white]Total Upgradable Packages: [/bold white][green]{upgradable}[/green]",
             justify="center",
         )
 
