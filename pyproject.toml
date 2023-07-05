@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "yala"
+version = "0.1.0"
+description = "The Most Prettier Package Manager for Arch Linux and Derivates"
+authors = ["Yoannis Sánchez Soto"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+typer = {extras = ["all"], version = "^0.9.0"}
+pyalpm = "^0.10.6"
+pyinstaller = "^5.11.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
