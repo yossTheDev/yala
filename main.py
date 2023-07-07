@@ -1,23 +1,21 @@
-import typer
-import pyalpm
-import pycman
-import time
 import socket
+import time
 from typing import List
 
+import pyalpm
+import pycman
+import typer
+from rich import print, prompt
 from rich.console import Console
-from rich import print
-from rich import prompt
-from rich.tree import Tree
 from rich.padding import Padding
-from rich.text import Text
 from rich.panel import Panel
+from rich.text import Text
+from rich.tree import Tree
 
-from callbacks import (
-    log_cb,
-    dl_cb,
-)
+from callbacks import dl_cb, log_cb
 
+
+__version__ = "0.1.0"
 
 app = typer.Typer()
 console = Console()
@@ -27,10 +25,38 @@ pacman = pycman.config.init_with_config("/etc/pacman.conf")  # type: ignore
 # App Commands
 
 
-@app.callback()
-def main(verbose: bool = False):
+@app.callback(invoke_without_command=True)
+def callback(ctx: typer.Context, verbose: bool = False, version: bool = False):
+    """
+    yala
+
+    - The most prettier package manage for Arch Linux and Derivates -
+    """
+
     if verbose == True:
         pacman.logcb = log_cb
+
+    if version or ctx.invoked_subcommand is None:
+        console.print(
+            r"""[bold blue]               
+                                                
+                              | |       
+                 _   _   __ _ | |  __ _ 
+                | | | | / _` || | / _` |
+                | |_| || (_| || || (_| |
+                 \__, | \__,_||_| \__,_|
+                  __/ |                 
+                 |___/                  
+                
+        [/bold blue]""",
+        )
+
+        console.print(
+            f"  [bold]- The Most Prettier Package Manager for Arch Linux[/bold] -"
+        )
+        console.print(f"                  [bold]Version:[/bold]{__version__}")
+
+        print()
 
 
 @app.command(name="list")
@@ -159,7 +185,7 @@ def upgrade(downgrade: bool = False, verbose: bool = False):
 @app.command()
 def install(pkg: List[str], verbose: bool = False):
     """
-    Install new packages in the System
+    Installs new packages on the System
     """
     # Initialize Pacman
     pacman.dlcb = dl_cb
@@ -564,4 +590,5 @@ def is_connected():
         return False
 
 
-app()
+if __name__ == "__main__":
+    app()
