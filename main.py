@@ -11,6 +11,8 @@ from rich.padding import Padding
 from rich.panel import Panel
 from rich.text import Text
 from rich.tree import Tree
+from datetime import datetime
+
 
 from callbacks import dl_cb, log_cb
 
@@ -62,7 +64,7 @@ def callback(ctx: typer.Context, verbose: bool = False, version: bool = False):
 @app.command(name="list")
 def lis(upgradable: bool = False):
     """
-    List all installed or upgradable packages in this machine
+    List All Installed or Upgradable Packages
     """
 
     if upgradable == True:
@@ -185,7 +187,7 @@ def upgrade(downgrade: bool = False, verbose: bool = False):
 @app.command()
 def install(pkg: List[str], verbose: bool = False):
     """
-    Installs new packages on the System
+    Installs New Packages
     """
     # Initialize Pacman
     pacman.dlcb = dl_cb
@@ -265,7 +267,7 @@ def install(pkg: List[str], verbose: bool = False):
 @app.command()
 def remove(pkg: List[str], verbose: bool = False):
     """
-    Remove packages from your System
+    Remove Packages from your System
     """
     # Initialize Pacman
     pacman.dlcb = dl_cb
@@ -330,13 +332,90 @@ def remove(pkg: List[str], verbose: bool = False):
 @app.command()
 def search(query: str, local: bool = False, exact: bool = False):
     """
-    Search for packages in local and sync dbs
+    Search for Packages in Local and Sync dbs
     """
 
     if local == True:
         search_localdb(query, exact)
     else:
         search_syncdbs(query, exact)
+
+
+@app.command()
+def inspect(pkg: str):
+    """
+    Inspect Packages
+    """
+    db: pyalpm.DB = pacman.get_localdb()
+
+    package = db.get_pkg(pkg)
+
+    if package:
+        tree = Tree(f"[bold green]{package.name}[/bold green]")
+        tree.add(f"[white]{package.desc}[white]")
+        tree.add(
+            f"[bright_black]source[/bright_black] : [blue]{package.db.name}[/blue]"
+        )
+        tree.add(f"[bright_black]description[/bright_black] : {package.desc}")
+        tree.add(
+            f"[bright_black]build date[/bright_black] : [blue]{datetime.fromtimestamp(package.builddate)}[/blue]"
+        )
+        tree.add(f"[bright_black]arch[/bright_black] : {package.arch}")
+        tree.add(f"[bright_black]url[/bright_black] : {package.url}")
+        tree.add(f"[bright_black]packager[/bright_black] : {package.packager}")
+        tree.add(f"[bright_black]md5sum[/bright_black] : {package.md5sum}")
+        tree.add(f"[bright_black]sha256sum[/bright_black] : {package.sha256sum}")
+        tree.add(f"[bright_black]base64_sig[/bright_black] : {package.base64_sig}")
+
+        tree.add(
+            f"[bright_black]install date[/bright_black] : [blue]{datetime.fromtimestamp(package.installdate)}[/blue]"
+        )
+        tree.add(
+            f"[bright_black]archive size[/bright_black] : [blue]{relative_bytes_converter(package.size)}[/blue]"
+        )
+        tree.add(
+            f"[bright_black]install size[/bright_black] : [blue]{relative_bytes_converter(package.isize)}[/blue]"
+        )
+        tree.add(
+            f"[bright_black]has scriptlet[/bright_black] : [blue]{package.has_scriptlet}[/blue]"
+        )
+        tree.add(
+            f"[bright_black]licenses[/bright_black] : [blue]{' '.join(package.licenses)}[/blue]"
+        )
+        tree.add(f"[bright_black]version[/bright_black] : {package.version}")
+        tree.add(
+            f"[bright_black]dependencies[/bright_black] : {' '.join(package.depends)}"
+        )
+        tree.add(
+            f"[bright_black]optional dependencies[/bright_black] : {' '.join(package.optdepends)}"
+        )
+        tree.add(
+            f"[bright_black]replaces[/bright_black] : {' '.join(package.replaces) if len(package.replaces) > 0 else None}"
+        )
+        tree.add(
+            f"[bright_black]provides[/bright_black] : {' '.join(package.provides) if len(package.provides) > 0 else None}"
+        )
+        tree.add(
+            f"[bright_black]conflicts[/bright_black] : {' '.join(package.conflicts) if len(package.conflicts) > 0 else None}"
+        )
+        tree.add(
+            f"[bright_black]backup[/bright_black] : {' '.join(package.backup) if len(package.backup) > 0 else None}"
+        )
+        tree.add(
+            f"[bright_black]groups[/bright_black] : {' '.join(package.groups) if len(package.groups) > 0 else None }"
+        )
+        tree.add(
+            f"[bright_black]required by[/bright_black] : {' '.join(package.compute_requiredby()) if len(package.compute_requiredby()) > 0 else None}"
+        )
+        tree.add(
+            f"[bright_black]optional for[/bright_black] : {' '.join(package.compute_optionalfor()) if len(package.compute_optionalfor()) > 0 else None}"
+        )
+
+        p = Padding(tree, 1)
+
+        print(p)
+    else:
+        print("Sorry there are not any package with this name")
 
 
 # Utils
