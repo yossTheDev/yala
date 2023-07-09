@@ -4,9 +4,9 @@
 <p align="center"> The Most Prettier, TUI based 📦 Package Manager for <b>Arch Linux</b> and <b>Derivates</b>. Inpired by <a href="https://github.com/volitank/nala">Nala</a></p>
 
 <div align="center">
-<img alt="GitHub" src="https://img.shields.io/github/license/yossthedev/yala?style=for-the-badge">
-<img alt="GitHub" src="https://img.shields.io/github/license/yossthedev/yala?style=for-the-badge">
-<img alt="GitHub" src="https://img.shields.io/github/license/yossthedev/yala?style=for-the-badge">
+<img alt="Python" src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff&style=for-the-badge">
+<img alt="Style" src="https://img.shields.io/badge/Black-06080C?label=style&labelColor=06080C&style=for-the-badge">
+<img alt="Licence" src="https://img.shields.io/github/license/yossthedev/yala?style=for-the-badge">
 </div>
 
 ```monospace
