@@ -24,4 +24,4 @@ rm yala
 rm $FILENAME
 
 # Mostramos un mensaje de éxito
-echo "yala is suceffuly installed. Contratulations!!!"
+echo "yala is suceffuly installed. Congratulations!!!"
