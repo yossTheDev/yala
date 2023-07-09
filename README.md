@@ -1,20 +1,32 @@
 <h1 align="center">yala</h1>
 
 ![screenshot](/img/banner.png)
-<p align="center"> The most prettier 📦 Package Manager for <b>Arch Linux</b> and <b>Derivates</b></p>
+<p align="center"> The Most Prettier, TUI based 📦 Package Manager for <b>Arch Linux</b> and <b>Derivates</b>. Inpired by Nala</p>
 
 <img alt="GitHub" src="https://img.shields.io/github/license/yossthedev/yala?style=for-the-badge">
+
+```monospace
+⚠️ yala is currently under development so expect drastic changes and some bugs
+```
 
 ## 🚀 Features
 
 * 🎨 Pretty outputs
-* 🙂 Ease to use
+* 🙂 Ease to use and intuitive commands
 * 📦 Basic Commands -> Install, Search, Update, Upgrade
 * 🏗️ Advanced Commands -> Inspect, more comming soon...
 
+---
+
+## 💡 The IDEA
+
+The idea behind **Yala** is to create a package manager more intuitive, beautiful, and with additional features to make our life easier. Like Inspecting Packages, Advanced Logs, Unlocking Databases, Clearing Package Cache and more, some are already implemented and others are still to come.
+
+----
+
 ## 👷‍♂️ Building From Source
 
-First, make sure all dependencies are sucefully installed, I recommend Poetry for enviroment configuration.
+First, make sure all dependencies are sucefully installed, I recommend [Poetry](https://python-poetry.org/) for enviroment configuration.
 
 ### Prepare Enviroment and Installing Dependencies
 
@@ -24,7 +36,7 @@ poetry install
 
 ### Building with **PyInstaller**
 
-Tested with Python 3.11 and PyInstaller 5.13.0
+Tested with **Python 3.11** and PyInstaller **5.13.0**
 
 ``` sh
 bash build.sh
@@ -32,19 +44,25 @@ bash build.sh
 
 ### Building with **Nuitka**
 
-Slow compile time but best performance and small compiled size
+Longer compile time but best performance and smaller compiled size. See [Nuitka Requirements](https://www.nuitka.net/doc/user-manual.html#requirements)
+
+Installing Nuitka:
 
 ``` sh
 python -m pip install nuitka  
 ```
 
-Tested with Python 3.11 and Nuitka 1.7
+Tested with **Python 3.11** and **Nuitka 1.7**
 
 ``` sh
 bash build_nuitka.sh
 ```
 
-## License
+## 👥 Contribution
+
+All contributions are welcome, do not hesitate to give your comments about the developments of **Yala** or collaborate by reporting bugs or writing code. Thank you very much 😄
+
+## ⚖️ License
 
 ---
 ![GPLv3](https://www.gnu.org/graphics/gplv3-with-text-136x68.png)

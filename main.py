@@ -497,10 +497,6 @@ def show_installed_packages():
     )
 
 
-def progress(percent, message):
-    typer.echo(percent)
-
-
 def get_package(package: str, dbs):
     for db in dbs:
         pk = db.get_pkg(package)
