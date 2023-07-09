@@ -1,5 +1,6 @@
 import socket
 import time
+from datetime import datetime
 from typing import List
 
 import pyalpm
@@ -11,11 +12,8 @@ from rich.padding import Padding
 from rich.panel import Panel
 from rich.text import Text
 from rich.tree import Tree
-from datetime import datetime
-
 
 from callbacks import dl_cb, log_cb
-
 
 __version__ = "0.1.0"
 
@@ -29,12 +27,6 @@ pacman = pycman.config.init_with_config("/etc/pacman.conf")  # type: ignore
 
 @app.callback(invoke_without_command=True)
 def callback(ctx: typer.Context, verbose: bool = False, version: bool = False):
-    """
-    yala
-
-    - The most prettier package manage for Arch Linux and Derivates -
-    """
-
     if verbose == True:
         pacman.logcb = log_cb
 
@@ -54,11 +46,15 @@ def callback(ctx: typer.Context, verbose: bool = False, version: bool = False):
         )
 
         console.print(
-            f"  [bold]- The Most Prettier Package Manager for Arch Linux[/bold] -"
+            f"  [bold]- The Most Prettier Package Manager for Arch Linux -[/bold]"
         )
-        console.print(f"                  [bold]Version:[/bold]{__version__}")
+        console.print(f"                    [bold]Version:[/bold]{__version__}")
 
-        print()
+        if not version:
+            print(ctx.get_help())
+
+        if version:
+            print()
 
 
 @app.command(name="list")
@@ -166,7 +162,7 @@ def upgrade(downgrade: bool = False, verbose: bool = False):
     )
 
     console.print(
-        "[white]Type [green]yala list[/green] [blue]--upgradable[/blue] to se all[/white]",
+        "[white]Type [green]yala list[/green] [blue]--upgradable[/blue] to se all upgradable packages[/white]",
         justify="center",
     )
 

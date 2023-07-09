@@ -1,4 +1,4 @@
-echo "Building YALA with PyInstaller"
+echo "Building YALA with Nuitka"
 
 echo "Start Poetry Shell"
 poetry install
@@ -8,7 +8,7 @@ echo "Cleanning..."
 rm dist -r
 
 echo "Building..."
-pyinstaller app.spec
+python -m nuitka main.py --standalone --onefile --output-filename=yala --output-dir=dist/
 
 echo "Compressing..."
 cd dist
