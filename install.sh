@@ -4,7 +4,7 @@
 VERSION="v0.1.0"
 
 # Yala Filename 
-FILENAME="yala-$VERSION.tar.gz"
+FILENAME="yala.tar.gz"
 
 # Get latest Yala Release from GitHub
 URL="https://github.com/yossTheDev/yala/releases/download/$VERSION/$FILENAME"
