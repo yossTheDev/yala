@@ -1,0 +1,56 @@
+name: Build and Release
+on:
+  create:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: arch-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Nuitka
+        run: |
+          sudo pacman -Syu
+          sudo pacman -S python python-pip python wheel
+          python -m pip install nuitka
+      - name: Install Protry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+      - name: Prepare Enviroment
+        run: |
+          poetry install
+      - name: Building...
+        run: |
+          python -m nuitka main.py --standalone --onefile --output-filename=yala --output-dir=dist/
+      - name: Compressing....
+        run: |
+          cd dist
+          tar -cf yala.tar.gz yala --auto-compress
+  release:
+    needs: build
+    runs-on: arch-latest
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            This is a Release
+          draft: true
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/yala.tar.gz
+          asset_name: yala.tar.gz
+          asset_content_type: application/octet-stream
