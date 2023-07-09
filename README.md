@@ -1,7 +1,7 @@
 <h1 align="center">yala</h1>
 
 ![screenshot](/img/banner.png)
-<p align="center"> The Most Prettier, TUI based 📦 Package Manager for <b>Arch Linux</b> and <b>Derivates</b>. Inpired by <a href="https://github.com/volitank/nala">Nala</a></p>
+<p align="center"> The Most Prettier, TUI based 📦 Package Manager for <b>Arch Linux</b> and <b>Derivatives</b>. Inpired by <a href="https://github.com/volitank/nala">Nala</a></p>
 
 <div align="center">
 <img alt="Python" src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff&style=for-the-badge">
